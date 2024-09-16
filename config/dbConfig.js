@@ -2,10 +2,10 @@ const sql = require('mssql');
 
 // Configure the SQL Server connection details
 const config = {
-    user: 'your_username',
-    password: 'your_password',
-    server: 'localhost', // Replace with your SQL Server address
-    database: 'your_database', // Replace with your database name
+    user: 'VEDANT\\Vedant',
+    password: '',
+    server: 'VEDANT\\SQLEXPRESS', // Replace with your SQL Server address
+    database: 'DeviceDisplay', // Replace with your database name
     options: {
         encrypt: true,   // Use encryption for Azure SQL, set to false for local
         enableArithAbort: true
