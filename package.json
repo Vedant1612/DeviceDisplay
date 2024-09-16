@@ -1,21 +1,15 @@
 {
-  "name": "device-data-app",
+  "name": "devicedisplay",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+     "start": "concurrently \"npm run start --prefix frontend\" \"npm run dev --prefix backend\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.3",
-    "express": "^4.21.0",
-    "mssql": "^11.0.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
+    "concurrently": "^9.0.1"
   }
 }
