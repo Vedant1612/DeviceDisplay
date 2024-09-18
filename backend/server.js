@@ -1,15 +1,28 @@
-// backend/server.js
-const express = require('express');
+const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = 3000;
+const bodyParser = require("body-parser");
+const db = require("./config/db"); 
 
-app.use(express.json());
+const dataLoggerRoutes = require('./routes/deviceDataRoutes');
+const pressureRoutes = require('./routes/deviceDataRoutes');
 
-// Define a basic route
-app.get('/', (req, res) => {
-  res.send('Hello from the chetan!');
-});
+// Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json()); // Enable JSON request body parsing
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Define routes
+// Added leading slash
+app.use("/api", dataLoggerRoutes); 
+
+// Check database connection
+db.checkConnection();
+
+// Start server
+app.listen(port, (err) => {
+  if (err) {
+    console.log(`Server error on port ${err}`);
+  } else {
+    console.log(`Server is running on port ${port}`);
+  }
 });
