@@ -19,8 +19,27 @@ const createPressure = async (req,res)=>{
         res.status(500).json({ error: error.message });
     }
 }
+const fetchAllPressure = async (req, res) => {
+    try {
+        const results = await Pressure.fetchAll();
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+const fetchAllDataLogger = async (req, res) => {
+    try {
+        const results = await DataLogger.fetchAll();
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 module.exports = {
     createDataLogger,
     createPressure,
+    fetchAllPressure,
+    fetchAllDataLogger
   };

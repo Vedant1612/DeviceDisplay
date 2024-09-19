@@ -28,6 +28,16 @@ const DataLogger = {
         } catch (error) {
             throw error; 
         }
+    },
+    fetchAll: async () => {
+        const query = `SELECT * FROM devicedata.datalogger`;
+
+        try {
+            const [rows] = await db.pool.execute(query);
+            return rows;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 
@@ -37,7 +47,8 @@ const Pressure = {
             throw new Error("Invalid data format");
         }
 
-        const query = `INSERT INTO devicedata.Pressure (device_type, device_no, access_token, network_ts, network_info, snr, data_start_timestamps, data_dl_interval, data_dl_entries, pressure_value, alarms, pressure_unit, City, Location, State) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO devicedata.Pressure (device_type, device_no, access_token, network_ts, network_info, snr, data_start_timestamps, data_dl_interval, data_dl_entries, pressure_value, alarms, pressure_unit, State, City, Location)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
         const values = [
             data.device_type,
@@ -46,19 +57,20 @@ const Pressure = {
             data.network_ts,
             data.network_info,
             data.snr,
-            data.data.start_timestamps, // Ensure this exists
+            data.data.start_timestamps,
             data.data.dl_interval,
             data.data.dl_entries,
             data.data.pressure_value,
             data.data.alarms,
             data.data.pressure_unit,
+            data.State,
             data.City,
             data.Location,
-            data.State
+            
         ];
 
-        // Check if the number of values matches the number of columns
-        if (values.length !== 14) {
+
+        if (values.length !== 15) {
             throw new Error(`Expected 14 values, but got ${values.length}`);
         }
 
@@ -68,8 +80,21 @@ const Pressure = {
         } catch (error) {
             throw error; 
         }
+
+        
+    },
+    fetchAll: async () => {
+        const query = `SELECT * FROM devicedata.Pressure`;
+
+        try {
+            const [rows] = await db.pool.execute(query);
+            return rows;
+        } catch (error) {
+            throw error;
+        }
     }
 };
+
 
 
 
