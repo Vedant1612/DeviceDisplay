@@ -1,17 +1,42 @@
+import axios from 'axios';
 import { useState, useEffect } from "react";
 import "./App.css";
-import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import DataCard from '../components/DataCard';
+import AnalyticsSection from '../components/AnalyticsSection';
 
 Chart.register(...registerables);
 
 function App() {
   const [deviceType, setDeviceType] = useState("Choose...");
   const [location, setLocation] = useState("");
-  const [date, setDate] = useState(null); // Changed to null for DatePicker
-  const [data, setData] = useState(null);
+  const [date, setDate] = useState(null);
+  const [data, setData] = useState([]);
+
+  // Function to fetch data from the API with filters
+  const fetchDataFromAPI = async (deviceType, location, date) => {
+    try {
+      const params = {
+        deviceType,
+        location,
+        date: date ? date.toLocaleDateString("en-GB") : null, // Format date if available
+      };
+
+      const response = await axios.get('http://localhost:3000/api/dataLogger', { params });
+      if (response.status === 200) {
+        const fetchedData = response.data;
+        console.log(fetchedData); // Log the data for debugging
+        setData(fetchedData); // Set the data to state
+      } else {
+        alert('Failed to fetch data from the server');
+      }
+    } catch (error) {
+      console.error('Error fetching DataLogger data:', error);
+      alert('An error occurred while fetching data');
+    }
+  };
 
   // Fetch data on submit
   const fetchData = () => {
@@ -20,6 +45,8 @@ function App() {
       return;
     }
 
+    fetchDataFromAPI(deviceType, location, date); // Call the function to fetch data from API
+
     const newData = {
       type: deviceType,
       location,
@@ -27,7 +54,7 @@ function App() {
       value: Math.floor(Math.random() * 1000), // Example value
     };
 
-    setData(newData);
+    setData([newData]); // Set new data as array for consistency
     storeDataInLocalStorage(newData);
   };
 
@@ -41,7 +68,7 @@ function App() {
     setDeviceType("Choose...");
     setLocation("");
     setDate(null); // Reset date
-    setData(null);
+    setData([]);
     localStorage.removeItem("storedData");
   };
 
@@ -49,7 +76,14 @@ function App() {
     const storedData = JSON.parse(localStorage.getItem("storedData"));
     if (storedData) {
       setData(storedData);
-      setDate(new Date(storedData.date)); // Restore date from storage
+
+      // Check if the stored date is valid before setting it
+      const restoredDate = new Date(storedData.date);
+      if (!isNaN(restoredDate.getTime())) {
+        setDate(restoredDate);
+      } else {
+        setDate(null); // If invalid, reset the date
+      }
     }
   }, []);
 
@@ -108,6 +142,9 @@ function App() {
               className="form-control date-picker"
               dateFormat="dd/MM/yyyy" // Format date
               placeholderText="Select a date"
+              showYearDropdown
+              yearDropdownItemNumber={15} // Show 15 years in dropdown
+              scrollableYearDropdown
             />
           </div>
         </div>
@@ -123,45 +160,21 @@ function App() {
       </div>
 
       <div className="data-display">
-        {data ? (
-          <>
-            <div className="card">
-              <h3>{data.type}</h3>
-              <p>Location: {data.location}</p>
-              <p>Date: {data.date}</p>
-              <div className="card-extended">
-                <p>Value: {data.value}</p>
-                <p>Status: {data.value > 500 ? "High" : "Normal"}</p>
-              </div>
-            </div>
-
-            <div className="chart-container">
-              <Line data={chartData} />
-            </div>
-
-            <div className="analytics-section">
-        {data && (
-          <>
-            <div className="analytics-card">
-              <h4>Average Value</h4>
-              <p className="analytics-value">320</p>
-            </div>
-            <div className="analytics-card">
-              <h4>Maximum Value</h4>
-              <p className="analytics-value">{data.value}</p>
-            </div>
-          </>
-        )}
-      </div>
-          </>
+        {data.length > 0 ? (
+          data.map(entry => (
+            entry.Location === location && (
+              <DataCard key={entry.Id} data={entry} />
+            )
+          ))
         ) : (
-          <>
           <p>No data to display</p>
-          </>
         )}
       </div>
 
-      
+
+
+      {/* <ChartSection chartData={chartData} /> */}
+      <AnalyticsSection data={data} />
     </div>
   );
 }

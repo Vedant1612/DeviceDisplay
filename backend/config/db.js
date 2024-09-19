@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: "localhost",
   database: "devicedata",
   user: "root",
-  password: "abc54321",
+  password: "vedant",
 });
 
 // Check connection (optional, you can also remove this if not needed)

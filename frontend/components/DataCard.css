@@ -1,0 +1,40 @@
+.data-card {
+  background-color: #2e3440; /* Dark background for modern look */
+  color: #eceff4; /* Light text color */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 1rem;
+  padding: 1rem;
+  max-width: 300px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.data-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  border-bottom: 1px solid #4c566a;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: #81a1c1;
+  margin: 0;
+}
+
+.card-body p {
+  margin: 0.5rem 0;
+}
+
+.card-body strong {
+  color: #88c0d0; /* Accent color for labels */
+}
