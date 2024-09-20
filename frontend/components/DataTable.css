@@ -1,0 +1,51 @@
+.table-container {
+    max-width: 100%; /* Adjusts the maximum width */
+    overflow: auto; /* Adds scroll if content overflows */
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse; /* Collapses borders for a cleaner look */
+    margin-top: 20px;
+    background-color: #ffffff; /* Light background for the table */
+    border-radius: 12px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px; /* Padding for table cells */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #e0e0e0; /* Light border between rows */
+  }
+  
+  .table th {
+    background-color: #e0e0e0; /* Header background */
+    color: #333; /* Header text color */
+    font-weight: bold; /* Bold text for headers */
+  }
+  
+  .table tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+  }
+  
+  .table td {
+    color: #555; /* Darker text for table data */
+  }
+  
+  .table td strong {
+    color: #201797; /* Accent color for important text */
+  }
+  
+  .table td:last-child {
+    text-align: right; /* Right-align the last column for better readability */
+  }
+  
+  .table tbody {
+    min-height: 150px; /* Set minimum height for table body */
+  }
+  
+  .no-data {
+    text-align: center; /* Center-align when there is no data */
+    color: #999; /* Lighter color for the no data message */
+  }
+  
