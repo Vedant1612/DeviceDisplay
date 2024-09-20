@@ -1,5 +1,5 @@
 import React from 'react';
-import './DataCard.css'; // Ensure you have this CSS file for styling
+import './DataCard.css'; 
 
 const DataCard = ({ data }) => {
   // Convert UNIX timestamp to a JavaScript Date object
@@ -11,7 +11,7 @@ const DataCard = ({ data }) => {
   return (
     <div className="data-card">
       <div className="card-header">
-        <h3 className="card-title">{data.type}</h3>
+        {/* <h3 className="card-title">{data.type}</h3> */}
         <p className="card-subtitle">{data.dt}</p>
       </div>
       <div className="card-body">

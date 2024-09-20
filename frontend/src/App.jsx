@@ -5,6 +5,7 @@ import { Chart, registerables } from "chart.js";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DataCard from '../components/DataCard';
+import DataTable from '../components/DataTable';
 import AnalyticsSection from '../components/AnalyticsSection';
 
 Chart.register(...registerables);
@@ -14,6 +15,7 @@ function App() {
   const [location, setLocation] = useState("");
   const [date, setDate] = useState(null);
   const [data, setData] = useState([]);
+  const [viewMode, setViewMode] = useState("cards"); // Add state for view mode
 
   // Function to fetch data from the API with filters
   const fetchDataFromAPI = async (deviceType, location, date) => {
@@ -87,19 +89,6 @@ function App() {
     }
   }, []);
 
-  // Sample data for the chart
-  const chartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "Device Data",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        fill: false,
-        borderColor: "#ff79c6",
-        tension: 0.1,
-      },
-    ],
-  };
 
   return (
     <div className="app-container">
@@ -159,17 +148,32 @@ function App() {
         </div>
       </div>
 
+      {/* toggle button */}
+      <div className="view-toggle"> 
+        <button className="btn btn-info" onClick={() => setViewMode("cards")}>
+          Card View
+        </button>
+        <button className="btn btn-info" onClick={() => setViewMode("table")}>
+          Table View
+        </button>
+      </div>
+
       <div className="data-display">
-        {data.length > 0 ? (
-          data.map(entry => (
-            entry.Location === location && (
-              <DataCard key={entry.Id} data={entry} />
-            )
-          ))
+        {viewMode === "cards" ? (
+          data.length > 0 ? (
+            data.map(entry => (
+              entry.Location === location && (
+                <DataCard key={entry.Id} data={entry} />
+              )
+            ))
+          ) : (
+            <p>No data to display</p>
+          )
         ) : (
-          <p>No data to display</p>
+          <DataTable data={data} location={location} />
         )}
       </div>
+
 
 
 
