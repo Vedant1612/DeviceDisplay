@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DataCard from '../components/DataCard';
 import DataTable from '../components/DataTable';
 import AnalyticsSection from '../components/AnalyticsSection';
+import { FaDatabase } from 'react-icons/fa';
 
 Chart.register(...registerables);
 
@@ -17,28 +18,38 @@ function App() {
   const [data, setData] = useState([]);
   const [viewMode, setViewMode] = useState("cards"); // Add state for view mode
 
-  // Function to fetch data from the API with filters
-  const fetchDataFromAPI = async (deviceType, location, date) => {
-    try {
-      const params = {
-        deviceType,
-        location,
-        date: date ? date.toLocaleDateString("en-GB") : null, // Format date if available
-      };
+// Function to fetch data from the API with filters
+const fetchDataFromAPI = async (deviceType, location, date) => {
+  try {
+    const params = {
+      deviceType,
+      location,
+      date: date ? date.toLocaleDateString("en-GB") : null, // Format date if available
+    };
 
-      const response = await axios.get('http://localhost:3000/api/dataLogger', { params });
-      if (response.status === 200) {
-        const fetchedData = response.data;
-        console.log(fetchedData); // Log the data for debugging
-        setData(fetchedData); // Set the data to state
-      } else {
-        alert('Failed to fetch data from the server');
-      }
-    } catch (error) {
-      console.error('Error fetching DataLogger data:', error);
-      alert('An error occurred while fetching data');
+    let apiUrl = ''; // Dynamically change API URL based on deviceType
+    if (deviceType === "DataLogger") {
+      apiUrl = 'http://localhost:3000/api/dataLogger';
+    } else if (deviceType === "Pressure") {
+      apiUrl = 'http://localhost:3000/api/pressure'; // Use the correct URL for Pressure data
+    } else if (deviceType === "Chlorin Analyzer") {
+      apiUrl = 'http://localhost:3000/api/chlorinAnalyzer'; // If you have a Chlorin Analyzer endpoint
     }
-  };
+
+    const response = await axios.get(apiUrl, { params });
+    if (response.status === 200) {
+      const fetchedData = response.data;
+      console.log(fetchedData); // Log the data for debugging
+      setData(fetchedData); // Set the data to state
+    } else {
+      alert('Failed to fetch data from the server');
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    alert('An error occurred while fetching data');
+  }
+};
+
 
   // Fetch data on submit
   const fetchData = () => {
@@ -132,7 +143,7 @@ function App() {
               dateFormat="dd/MM/yyyy" // Format date
               placeholderText="Select a date"
               showYearDropdown
-              yearDropdownItemNumber={15} // Show 15 years in dropdown
+              yearDropdownItemNumber={150} // Show 15 years in dropdown
               scrollableYearDropdown
             />
           </div>
@@ -159,22 +170,44 @@ function App() {
       </div>
 
       <div className="data-display">
-        {viewMode === "cards" ? (
-          data.length > 0 ? (
-            data.map(entry => (
-              entry.Location === location && (
-                <DataCard key={entry.Id} data={entry} />
-              )
-            ))
-          ) : (
-            <p>No data to display</p>
+  {viewMode === "cards" ? (
+    data.length > 0 ? (
+      data.filter(entry => entry.Location === location).length > 0 ? (
+        data.map(entry => (
+          entry.Location === location && (
+            <DataCard key={entry.Id} data={entry} deviceType={deviceType} />
           )
-        ) : (
-          <DataTable data={data} location={location} />
-        )}
+        ))
+      ) : (
+        <div className="no-data-container">
+          <FaDatabase className="no-data-icon" />
+          <p className="no-data-message">No data available for the selected location.</p>
+        </div>
+      )
+    ) : (
+      <div className="no-data-container">
+        <FaDatabase className="no-data-icon" />
+        <p className="no-data-message">No data available for the selected filters.</p>
       </div>
-
-
+    )
+  ) : (
+    data.length > 0 ? (
+      data.filter(entry => entry.Location === location).length > 0 ? (
+        <DataTable data={data.filter(entry => entry.Location === location)} location={location} deviceType={deviceType} />
+      ) : (
+        <div className="no-data-container">
+          <FaDatabase className="no-data-icon" />
+          <p className="no-data-message">No data available for the selected location.</p>
+        </div>
+      )
+    ) : (
+      <div className="no-data-container">
+        <FaDatabase className="no-data-icon" />
+        <p className="no-data-message">No data available for the selected filters.</p>
+      </div>
+    )
+  )}
+</div>
 
 
       {/* <ChartSection chartData={chartData} /> */}

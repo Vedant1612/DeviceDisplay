@@ -15,12 +15,12 @@
   .table td {
     padding: 12px; /* Padding for table cells */
     text-align: left; /* Align text to the left */
-    border-bottom: 1px solid #e0e0e0; /* Light border between rows */
+    border-bottom: 1px solid #04000f; /* Light border between rows */
   }
   
   .table th {
-    background-color: #e0e0e0; /* Header background */
-    color: #333; /* Header text color */
+    background-color: #bdbcbc; /* Header background */
+    color: #272626; /* Header text color */
     font-weight: bold; /* Bold text for headers */
   }
   
